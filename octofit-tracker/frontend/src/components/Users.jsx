@@ -13,7 +13,7 @@ function Users() {
       setLoading(true)
       setError('')
       try {
-        const data = await fetchResource('users')
+        const data = await fetchResource('users/')
         if (!cancelled) {
           setUsers(data)
         }
@@ -40,7 +40,7 @@ function Users() {
         <div>
           <h2 className="h3 mb-1">Users</h2>
           <p className="text-muted mb-0 small">
-            Source: {API_BASE_URL}/api/users
+            Source: {API_BASE_URL}/api/users/
           </p>
         </div>
       </div>

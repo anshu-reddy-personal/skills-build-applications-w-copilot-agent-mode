@@ -13,7 +13,7 @@ function Teams() {
       setLoading(true)
       setError('')
       try {
-        const data = await fetchResource('teams')
+        const data = await fetchResource('teams/')
         if (!cancelled) {
           setTeams(data)
         }
@@ -40,7 +40,7 @@ function Teams() {
         <div>
           <h2 className="h3 mb-1">Teams</h2>
           <p className="text-muted mb-0 small">
-            Source: {API_BASE_URL}/api/teams
+            Source: {API_BASE_URL}/api/teams/
           </p>
         </div>
       </div>

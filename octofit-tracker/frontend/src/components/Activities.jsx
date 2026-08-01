@@ -13,7 +13,7 @@ function Activities() {
       setLoading(true)
       setError('')
       try {
-        const data = await fetchResource('activities')
+        const data = await fetchResource('activities/')
         if (!cancelled) {
           setActivities(data)
         }
@@ -40,7 +40,7 @@ function Activities() {
         <div>
           <h2 className="h3 mb-1">Activities</h2>
           <p className="text-muted mb-0 small">
-            Source: {API_BASE_URL}/api/activities
+            Source: {API_BASE_URL}/api/activities/
           </p>
         </div>
       </div>

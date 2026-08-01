@@ -13,7 +13,7 @@ function Leaderboard() {
       setLoading(true)
       setError('')
       try {
-        const data = await fetchResource('leaderboard')
+        const data = await fetchResource('leaderboard/')
         if (!cancelled) {
           setEntries(data)
         }
@@ -40,7 +40,7 @@ function Leaderboard() {
         <div>
           <h2 className="h3 mb-1">Leaderboard</h2>
           <p className="text-muted mb-0 small">
-            Source: {API_BASE_URL}/api/leaderboard
+            Source: {API_BASE_URL}/api/leaderboard/
           </p>
         </div>
       </div>
