@@ -1,16 +1,80 @@
-# React + Vite
+# OctoFit Tracker Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+React 19 + Vite presentation tier for the OctoFit Tracker multi-tier application.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- React 19
+- Vite
+- react-router-dom
+- Bootstrap 5
 
-## React Compiler
+## Environment variables
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+`VITE_CODESPACE_NAME` **must be defined** when the frontend talks to a backend running in GitHub Codespaces.
 
-## Expanding the Oxlint configuration
+Create `octofit-tracker/frontend/.env.local`:
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+```bash
+cp octofit-tracker/frontend/.env.example octofit-tracker/frontend/.env.local
+```
+
+Then set:
+
+```env
+VITE_CODESPACE_NAME=your-codespace-name
+```
+
+The app builds API URLs with Vite env access:
+
+```js
+import.meta.env.VITE_CODESPACE_NAME
+```
+
+Resolved endpoint pattern:
+
+```text
+https://${import.meta.env.VITE_CODESPACE_NAME}-8000.app.github.dev/api/[component]
+```
+
+Examples:
+
+- `.../api/activities`
+- `.../api/leaderboard`
+- `.../api/teams`
+- `.../api/users`
+- `.../api/workouts`
+
+### Safe fallback
+
+If `VITE_CODESPACE_NAME` is unset/empty, the client uses:
+
+```text
+http://localhost:8000
+```
+
+This avoids invalid URLs such as `https://undefined-8000.app.github.dev`.
+
+Restart the Vite dev server after changing `.env.local`.
+
+## Develop
+
+```bash
+npm install --prefix octofit-tracker/frontend
+npm run dev --prefix octofit-tracker/frontend
+```
+
+The UI is served on port `5173`.
+
+## Routes
+
+| Path | Component |
+|------|-----------|
+| `/` | Home |
+| `/activities` | Activities |
+| `/leaderboard` | Leaderboard |
+| `/teams` | Teams |
+| `/users` | Users |
+| `/workouts` | Workouts |
+
+Components accept either a bare JSON array or common paginated shapes (`results`, `data`, or `items`).
