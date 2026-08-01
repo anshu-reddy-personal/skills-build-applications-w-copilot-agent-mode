@@ -25,7 +25,8 @@ async function seedDatabase() {
     console.log('Cleared existing collections');
 
     // Users - Mergington High School students and staff
-    const users = await User.insertMany([
+    // Use create() so the User model password hashing middleware runs
+    const users = await User.create([
       {
         email: 'paul.octo@mergingtonghs.edu',
         name: 'Paul Octo',

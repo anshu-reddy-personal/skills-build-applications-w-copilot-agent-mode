@@ -1,11 +1,7 @@
 import { Link } from 'react-router-dom'
+import { API_BASE_URL } from '../api'
 
 function Home() {
-  const codespaceName = import.meta.env.VITE_CODESPACE_NAME
-  const apiBaseUrl = codespaceName
-    ? `https://${codespaceName}-8000.app.github.dev`
-    : 'http://localhost:8000'
-
   return (
     <section className="page-section text-start">
       <div className="p-4 p-md-5 mb-4 bg-primary-subtle border rounded-3">
@@ -15,7 +11,7 @@ function Home() {
           suggestions for Mergington High School.
         </p>
         <p className="mb-4 text-muted">
-          API base URL: <code>{apiBaseUrl}</code>
+          API base URL: <code>{API_BASE_URL}</code>
         </p>
         <div className="d-flex flex-wrap gap-2">
           <Link className="btn btn-primary" to="/activities">

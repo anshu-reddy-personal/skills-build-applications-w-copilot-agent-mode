@@ -1,7 +1,40 @@
 import { Router, Request, Response } from 'express';
-import { User } from '../models/User.js';
+import bcrypt from 'bcrypt';
+import { User, SALT_ROUNDS } from '../models/User.js';
 
 const router = Router();
+
+interface WritableUserData {
+  email?: string;
+  name?: string;
+  password?: string;
+  age?: number;
+  team?: string;
+}
+
+function pickWritableFields(body: Record<string, unknown>): WritableUserData {
+  const data: WritableUserData = {};
+
+  if (typeof body.email === 'string') {
+    data.email = body.email;
+  }
+  if (typeof body.name === 'string') {
+    data.name = body.name;
+  }
+  if (typeof body.password === 'string') {
+    data.password = body.password;
+  }
+  if (typeof body.age === 'number') {
+    data.age = body.age;
+  } else if (typeof body.age === 'string' && body.age.trim() !== '' && !Number.isNaN(Number(body.age))) {
+    data.age = Number(body.age);
+  }
+  if (typeof body.team === 'string') {
+    data.team = body.team;
+  }
+
+  return data;
+}
 
 router.get('/', async (_req: Request, res: Response) => {
   try {
@@ -27,7 +60,8 @@ router.get('/:id', async (req: Request, res: Response) => {
 
 router.post('/', async (req: Request, res: Response) => {
   try {
-    const user = await User.create(req.body);
+    const data = pickWritableFields(req.body as Record<string, unknown>);
+    const user = await User.create(data);
     const result = user.toObject();
     delete result.password;
     res.status(201).json(result);
@@ -38,7 +72,16 @@ router.post('/', async (req: Request, res: Response) => {
 
 router.put('/:id', async (req: Request, res: Response) => {
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    const data = pickWritableFields(req.body as Record<string, unknown>);
+
+    // findByIdAndUpdate bypasses document middleware, so hash here when needed
+    if (data.password && data.password.length > 0) {
+      data.password = await bcrypt.hash(data.password, SALT_ROUNDS);
+    } else {
+      delete data.password;
+    }
+
+    const user = await User.findByIdAndUpdate(req.params.id, data, {
       new: true,
       runValidators: true,
     }).select('-password');

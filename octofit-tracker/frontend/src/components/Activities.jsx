@@ -1,34 +1,11 @@
 import { useEffect, useState } from 'react'
-
-function normalizeList(payload) {
-  if (Array.isArray(payload)) {
-    return payload
-  }
-  if (payload && typeof payload === 'object') {
-    if (Array.isArray(payload.results)) {
-      return payload.results
-    }
-    if (Array.isArray(payload.data)) {
-      return payload.data
-    }
-    if (Array.isArray(payload.items)) {
-      return payload.items
-    }
-  }
-  return []
-}
+import { API_BASE_URL, fetchResource } from '../api'
 
 function Activities() {
   const [activities, setActivities] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-
-  // VITE_CODESPACE_NAME must be defined (for example in `.env.local`).
-  // Fallback avoids https://undefined-8000.app.github.dev URLs.
-  const codespaceName = import.meta.env.VITE_CODESPACE_NAME
-  const apiUrl = codespaceName
-    ? `https://${codespaceName}-8000.app.github.dev/api/activities/`
-    : 'http://localhost:8000/api/activities/'
+  const apiUrl = `${API_BASE_URL}/api/activities/`
 
   useEffect(() => {
     let cancelled = false
@@ -37,13 +14,9 @@ function Activities() {
       setLoading(true)
       setError('')
       try {
-        const response = await fetch(apiUrl)
-        if (!response.ok) {
-          throw new Error(`Request failed (${response.status}) for ${apiUrl}`)
-        }
-        const payload = await response.json()
+        const data = await fetchResource('activities')
         if (!cancelled) {
-          setActivities(normalizeList(payload))
+          setActivities(data)
         }
       } catch (err) {
         if (!cancelled) {
@@ -60,7 +33,7 @@ function Activities() {
     return () => {
       cancelled = true
     }
-  }, [apiUrl])
+  }, [])
 
   return (
     <section className="page-section">
