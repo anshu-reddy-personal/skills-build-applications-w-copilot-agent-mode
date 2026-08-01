@@ -1,21 +1,49 @@
 import { useEffect, useState } from 'react'
-import { API_BASE_URL, fetchResource } from '../api'
+
+function normalizeList(payload) {
+  if (Array.isArray(payload)) {
+    return payload
+  }
+  if (payload && typeof payload === 'object') {
+    if (Array.isArray(payload.results)) {
+      return payload.results
+    }
+    if (Array.isArray(payload.data)) {
+      return payload.data
+    }
+    if (Array.isArray(payload.items)) {
+      return payload.items
+    }
+  }
+  return []
+}
 
 function Leaderboard() {
   const [entries, setEntries] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
 
+  // VITE_CODESPACE_NAME must be defined (for example in `.env.local`).
+  // Fallback avoids https://undefined-8000.app.github.dev URLs.
+  const codespaceName = import.meta.env.VITE_CODESPACE_NAME
+  const apiUrl = codespaceName
+    ? `https://${codespaceName}-8000.app.github.dev/api/leaderboard/`
+    : 'http://localhost:8000/api/leaderboard/'
+
   useEffect(() => {
     let cancelled = false
 
-    async function loadLeaderboard() {
+    async function load() {
       setLoading(true)
       setError('')
       try {
-        const data = await fetchResource('leaderboard/')
+        const response = await fetch(apiUrl)
+        if (!response.ok) {
+          throw new Error(`Request failed (${response.status}) for ${apiUrl}`)
+        }
+        const payload = await response.json()
         if (!cancelled) {
-          setEntries(data)
+          setEntries(normalizeList(payload))
         }
       } catch (err) {
         if (!cancelled) {
@@ -28,20 +56,18 @@ function Leaderboard() {
       }
     }
 
-    loadLeaderboard()
+    load()
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [apiUrl])
 
   return (
     <section className="page-section">
       <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
         <div>
           <h2 className="h3 mb-1">Leaderboard</h2>
-          <p className="text-muted mb-0 small">
-            Source: {API_BASE_URL}/api/leaderboard/
-          </p>
+          <p className="text-muted mb-0 small">Source: {apiUrl}</p>
         </div>
       </div>
 
