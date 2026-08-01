@@ -1,0 +1,34 @@
+.app-shell {
+  width: 100%;
+  min-height: 100svh;
+  background: var(--bg, #fff);
+}
+
+.app-logo {
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.page-section {
+  text-align: left;
+}
+
+.page-section h1,
+.page-section h2,
+.page-section .h3,
+.page-section .h5 {
+  color: var(--text-h, #08060d);
+}
+
+.table > :not(caption) > * > * {
+  vertical-align: middle;
+}
+
+.navbar-brand {
+  font-weight: 600;
+  letter-spacing: 0.2px;
+}
+
+.nav-link.active {
+  color: #fff !important;
+}
