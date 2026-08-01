@@ -1,8 +1,10 @@
+import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import { User, Team, Activity, Leaderboard, Workout } from '../models/index.js';
 
-const connectionString = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
+dotenv.config();
 
+const connectionString = process.env.MONGODB_URI || 'mongodb://localhost:27017/octofit_db';
 /**
  * Seed the octofit_db database with test data
  */
