@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import './config/database';
+import './config/database.js';
+import apiRouter from './routes/index.js';
 
 dotenv.config();
 
@@ -30,9 +31,16 @@ app.get('/api/', (_req, res) => {
     baseUrl,
     endpoints: {
       health: `${baseUrl}/api/health`,
+      users: `${baseUrl}/api/users/`,
+      teams: `${baseUrl}/api/teams/`,
+      activities: `${baseUrl}/api/activities/`,
+      leaderboard: `${baseUrl}/api/leaderboard/`,
+      workouts: `${baseUrl}/api/workouts/`,
     },
   });
 });
+
+app.use('/api', apiRouter);
 
 app.listen(PORT, () => {
   console.log(`OctoFit Tracker API listening on port ${PORT}`);
